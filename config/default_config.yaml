@@ -1,0 +1,23 @@
+training_parameters:
+  optim: "Adam"
+  lr: 0.003 #0.0005
+  batch_size: 4
+  num_workers: 4
+  sheduler: "cosine"
+early_stop:
+  cross_validation_params:
+    k: 6
+  observe_window: 5
+dataset_path:
+  NTHUSCDet:
+    train_img_path: "../data/NTHUSCDet/train"
+    train_gt_path:  "../data/NTHUSCDet/label_json/train.json"
+  NTHUSCDet-light:
+    train_img_path: "../data/NTHUSCDet-light/train"
+    train_gt_path:  "../data/NTHUSCDet-light/label_json/train.json"
+  NTHUSCDet-night:
+    train_img_path: "../data/NTHUSCDet-night/train"
+    train_gt_path:  "../data/NTHUSCDet-night/label_json/train.json"
+  SmartHome:
+    train_img_path: "../data/SmartHome/train"
+    train_gt_path:  "../data/SmartHome/labels/train.json"
