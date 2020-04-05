@@ -97,29 +97,35 @@ def main(args):
         budget = query_item[i]
         count = 0
         list_selected_inds = []
-        for _tt in range(3):
-            flags_selected = np.zeros((uncertain.shape[0],))
-            _ii = 0
-            while count < budget and _ii < uncertain.shape[0]:
-                if flags[inds_sorted[_ii]] == 1 or (flags_selected[inds_sorted[_ii]] == 1 and _tt <= 1):
-                    _ii += 1
-                    continue
-                list_selected_inds.append(_ii)
+        if np.sum(flags==False) > budget:
+            for _tt in range(3):
+                flags_selected = np.zeros((uncertain.shape[0],))
+                _ii = 0
+                while count < budget and _ii < uncertain.shape[0]:
+                    if flags[inds_sorted[_ii]] == 1 or (flags_selected[inds_sorted[_ii]] == 1 and _tt <= 1):
+                        _ii += 1
+                        continue
+                    list_selected_inds.append(_ii)
 
-                flags[inds_sorted[_ii]] = True
-                if apply_selection_trick:
-                    flags_selected[inds_sorted[_ii] - 15:inds_sorted[_ii] + 15] = 1
-                    flags[inds_sorted[_ii] - 2:inds_sorted[_ii] + 3] = 1
-                else:
-                    flags_selected[inds_sorted[_ii]] = 1
-                    flags[inds_sorted[_ii]] = 1
+                    flags[inds_sorted[_ii]] = True
+                    if apply_selection_trick:
+                        flags_selected[inds_sorted[_ii] - 15:inds_sorted[_ii] + 15] = 1
+                        flags[inds_sorted[_ii] - 2:inds_sorted[_ii] + 3] = 1
+                    else:
+                        flags_selected[inds_sorted[_ii]] = 1
+                        flags[inds_sorted[_ii]] = 1
 
-                assert len(flags) == uncertain.shape[0]
-                #data_table.append(self._ds_active_unlabeled.data_table[inds_sorted[_ii]])
-                #ped_count += len(data_table[-1][1])
-                count += 1
-        trick_flags = flags
-        query_index = list_selected_inds
+                    assert len(flags) == uncertain.shape[0]
+                    #data_table.append(self._ds_active_unlabeled.data_table[inds_sorted[_ii]])
+                    #ped_count += len(data_table[-1][1])
+                    count += 1
+            trick_flags = flags
+            query_index = list_selected_inds
+        else:
+            unlabeled_np = np.array(unlabeled)
+            unlabeled_uncert = uncertain[unlabeled_np]
+            selection_index = np.argsort(unlabeled_uncert)[::-1][:budget]
+            query_index = unlabeled_np[selection_index].to_list()
         
         # Update indexes
         recode_selection_information(filepath, train_dataset, query_index)

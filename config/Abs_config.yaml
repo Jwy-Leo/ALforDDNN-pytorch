@@ -1,8 +1,8 @@
 training_parameters:
   optim: "Adam"
   lr: 0.003 #0.0005
-  batch_size: 16
-  num_workers: 16
+  batch_size: 4
+  num_workers: 4
   sheduler: "cosine"
 early_stop:
   cross_validation_params:
