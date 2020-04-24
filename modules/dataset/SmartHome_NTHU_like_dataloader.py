@@ -110,6 +110,8 @@ class SmartHome_Dataset(Dataset):
             import pdb;pdb.set_trace()
 
         gtl = np.array(gt_lists)
+        if gtl.shape[1] ==0:
+            return np.zeros((0,4)), np.zeros(0)
         bboxes = gtl[:, :4]
         bboxes[:, 2] += bboxes[:, 0]
         bboxes[:, 3] += bboxes[:, 1]
